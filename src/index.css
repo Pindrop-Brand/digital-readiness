@@ -1,0 +1,33 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #FBF9F5;
+  min-height: 100vh;
+}
+
+/* Hover utilities — used via className instead of inline style-hover */
+.btn-hover:hover {
+  opacity: 0.85;
+}
+
+.btn-secondary:hover {
+  border-color: #7A7166 !important;
+}
+
+.btn-primary-hover:hover {
+  opacity: 0.9;
+}
+
+.link-hover:hover {
+  color: #140700 !important;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
