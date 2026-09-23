@@ -15,7 +15,6 @@ type Props = Pick<
   | 'showBack'
   | 'showContinue'
   | 'showSeeResults'
-  | 'showSkip'
   | 'seeResultsDisabled'
   | 'continueDisabled'
   | 'hint'
@@ -26,7 +25,6 @@ type Props = Pick<
   | 'onBack'
   | 'onContinue'
   | 'onSeeResults'
-  | 'onSkip'
   | 'pageMethodOpen'
   | 'togglePageMethod'
   | 'pageMethodGlyph'
@@ -44,7 +42,6 @@ export function QuizPage({
   showBack,
   showContinue,
   showSeeResults,
-  showSkip,
   seeResultsDisabled,
   continueDisabled,
   hint,
@@ -55,7 +52,6 @@ export function QuizPage({
   onBack,
   onContinue,
   onSeeResults,
-  onSkip,
   pageMethodOpen,
   togglePageMethod,
   pageMethodGlyph,
@@ -86,7 +82,7 @@ export function QuizPage({
             The Deepfake Readiness Assessment
           </h1>
           <p style={{ color: '#FFFFFF', opacity: 0.85, fontSize: 16, maxWidth: 600, margin: '0 0 4px' }}>
-            A 12-question self-assessment. Answer to find out where you stand against your peers
+            A six-question self-assessment. Answer to find out where you stand against your peers
             and what to prioritize next.
           </p>
         </div>
@@ -189,7 +185,7 @@ export function QuizPage({
                 }}
               >
                 <span style={{ color: '#FF5100', fontWeight: 600 }}>{pageMethodGlyph}</span>{' '}
-                How this score works
+                *How this score works
               </div>
               {pageMethodOpen && (
                 <div
@@ -201,12 +197,21 @@ export function QuizPage({
                   }}
                 >
                   <p style={{ margin: '0 0 10px' }}>
-                    <b style={{ color: '#140700' }}>How your score is calculated.</b> Five
-                    questions, each drawn from a single Wakefield survey item, are scored on their
-                    native answer scale and summed within their pillar, then normalized to 0–100.
-                    Your composite is the weighted sum of three pillars: Budget and ownership
-                    (35%), Tools and detection (35%), People and training (30%). Tiers: Exposed
-                    0–39, Reactive 40–69, Prepared 70–100.
+                    <b style={{ color: '#140700' }}>How your score is calculated.</b> Six
+                    questions and their respective answers, each drawn from the 2026 survey
+                    conducted by Wakefield Research, are scored by assigning a point value to each
+                    answer based on Pindrop's judgement on how each answer impacts readiness. These
+                    scores are then summed within their pillars, and then normalized to 0–100. Your
+                    composite score is the weighted sum of the three pillars: Budget and ownership
+                    (35%), Tools and detection (35%), People and training (30%). The three readiness
+                    tiers are: Exposed 0–39, Reactive 40–69, Prepared 70–100.
+                  </p>
+                  <p style={{ margin: '0 0 10px' }}>
+                    <b style={{ color: '#140700' }}>On the tiers.</b> Exposed (0–39), Reactive
+                    (40–69), and Prepared (70–100) are thresholds Pindrop chose, not derived from
+                    the survey data. Pindrop believes they reflect meaningfully different levels of
+                    readiness, but a different, equally defensible framework could draw these lines
+                    in different places.
                   </p>
                   <p style={{ margin: '0 0 10px' }}>
                     <b style={{ color: '#140700' }}>On the weighting.</b> These weights and tier
@@ -275,68 +280,68 @@ export function QuizPage({
         <div
           style={{
             display: 'flex',
-            gap: 12,
-            flexWrap: 'wrap',
             alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
             margin: '22px 0 8px',
           }}
         >
-          {showBack && (
-            <button
-              onClick={onBack}
-              className="btn-secondary"
-              style={{
-                fontFamily: "'Geist', sans-serif",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: '12px 22px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                background: 'transparent',
-                color: '#140700',
-                border: '1px solid #E3DED3',
-                cursor: 'pointer',
-              }}
-            >
-              Back
-            </button>
-          )}
-          {showContinue && (
-            <button
-              onClick={onContinue}
-              disabled={continueDisabled}
-              style={{
-                fontFamily: "'Geist', sans-serif",
-                fontSize: 14,
-                fontWeight: 600,
-                padding: '12px 22px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                border: 'none',
-                cursor: continueDisabled ? 'default' : 'pointer',
-                background: continueBg,
-                color: continueColor,
-              }}
-            >
-              Continue
-            </button>
-          )}
-          {showSkip && (
-            <span
-              onClick={onSkip}
-              className="link-hover"
-              style={{
-                fontFamily: "'Geist', sans-serif",
-                fontSize: 14,
-                fontWeight: 600,
-                color: '#7A7166',
-                cursor: 'pointer',
-                textDecoration: 'underline',
-              }}
-            >
-              Skip
-            </span>
-          )}
+          {/* Left: Back, Continue, hint */}
+          <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+            {showBack && (
+              <button
+                onClick={onBack}
+                className="btn-secondary"
+                style={{
+                  fontFamily: "'Geist', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  padding: '12px 22px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  background: 'transparent',
+                  color: '#140700',
+                  border: '1px solid #E3DED3',
+                  cursor: 'pointer',
+                }}
+              >
+                Back
+              </button>
+            )}
+            {showContinue && (
+              <button
+                onClick={onContinue}
+                disabled={continueDisabled}
+                style={{
+                  fontFamily: "'Geist', sans-serif",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  padding: '12px 22px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  border: 'none',
+                  cursor: continueDisabled ? 'default' : 'pointer',
+                  background: continueBg,
+                  color: continueColor,
+                }}
+              >
+                Continue
+              </button>
+            )}
+            {hint && (
+              <span
+                style={{
+                  fontFamily: "'Geist Mono', monospace",
+                  fontSize: 12,
+                  color: '#7A7166',
+                }}
+              >
+                {hint}
+              </span>
+            )}
+          </div>
+
+          {/* Right: See my results */}
           {showSeeResults && (
             <button
               onClick={onSeeResults}
@@ -356,17 +361,6 @@ export function QuizPage({
             >
               See my results
             </button>
-          )}
-          {hint && (
-            <span
-              style={{
-                fontFamily: "'Geist Mono', monospace",
-                fontSize: 12,
-                color: '#7A7166',
-              }}
-            >
-              {hint}
-            </span>
           )}
         </div>
       </div>

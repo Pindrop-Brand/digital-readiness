@@ -31,3 +31,45 @@ body {
     display: none !important;
   }
 }
+
+/* Gate modal form inputs */
+.gate-form-input {
+  width: 100%;
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 1px solid #E3DED3;
+  border-radius: 3px;
+  background: #FFFFFF;
+  color: #140700;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+}
+
+.gate-form-input:focus {
+  border-color: #FF5100;
+  box-shadow: 0 0 0 2px rgba(255, 81, 0, 0.12);
+}
+
+.gate-form-input.has-error {
+  border-color: #D94F00;
+}
+
+.gate-form-input.has-error:focus {
+  box-shadow: 0 0 0 2px rgba(217, 79, 0, 0.12);
+}
+
+/* Responsive 2-col grid for gate form */
+.gate-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 16px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 480px) {
+  .gate-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

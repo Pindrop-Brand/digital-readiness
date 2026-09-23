@@ -56,7 +56,7 @@ export function CoverPage({ startAssessment, coverDisclaimerOpen, toggleCoverDis
             margin: '0 auto 34px',
           }}
         >
-          A 12-question self-assessment. Answer to find out where you stand against your peers
+          A six-question self-assessment. Answer to find out where you stand against your peers
           and what to prioritize next.
         </p>
         <button

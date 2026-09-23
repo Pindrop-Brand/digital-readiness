@@ -14,6 +14,7 @@ type Props = Pick<
   | 'contextCards'
   | 'recPillarName'
   | 'recBody'
+  | 'isPerfect'
   | 'peerAccOpen'
   | 'togglePeerAcc'
   | 'peerAccGlyph'
@@ -67,6 +68,7 @@ export function ResultsPage({
   contextCards,
   recPillarName,
   recBody,
+  isPerfect,
   peerAccOpen,
   togglePeerAcc,
   peerAccGlyph,
@@ -111,7 +113,7 @@ export function ResultsPage({
                 color: '#FFFFFF',
               }}
             >
-              {tierName}
+              {tierName}*
             </div>
             <div style={{ margin: '8px 0 0', fontFamily: "'Geist Mono', monospace" }}>
               <span style={{ fontSize: 20, fontWeight: 600, color: '#FFFFFF' }}>{scoreRounded}</span>
@@ -219,8 +221,9 @@ export function ResultsPage({
                 You&apos;re <b style={{ color: '#140700' }}>{diffTxt}</b> (Peer average: {peerAvg})
               </p>
               <p style={{ fontSize: 12.5, color: '#7A7166', lineHeight: 1.5, margin: 0 }}>
-                Peer average is calculated by averaging each question separately, then creating a
-                composite score based on those averages.
+                Peer average comes from the survey itself: for each scored question we take the
+                average answer given by the 250 security leaders surveyed, then run that set of
+                average answers through the same pillar weighting used to calculate your score.
               </p>
 
               <div
@@ -319,8 +322,14 @@ export function ResultsPage({
               }}
             >
               <h4 style={{ margin: '0 0 6px', fontSize: 15, fontWeight: 400, color: '#7A7166' }}>
-                Next: focus on{' '}
-                <b style={{ fontWeight: 700, color: '#140700' }}>{recPillarName}</b>
+                {isPerfect ? (
+                  <b style={{ fontWeight: 700, color: '#140700' }}>Recommendation</b>
+                ) : (
+                  <>
+                    Recommendation: focus on{' '}
+                    <b style={{ fontWeight: 700, color: '#140700' }}>{recPillarName}</b>
+                  </>
+                )}
               </h4>
               <p style={{ margin: 0, fontSize: 14, color: '#140700' }}>{recBody}</p>
             </div>
@@ -410,8 +419,8 @@ export function ResultsPage({
               padding: '2px 0',
             }}
           >
-            <span style={{ color: '#FF5100', fontWeight: 600 }}>{footerMethodGlyph}</span> How
-            this score works
+            <span style={{ color: '#FF5100', fontWeight: 600 }}>{footerMethodGlyph}</span>{' '}
+            *How this score works
           </div>
           {footerMethodOpen && (
             <div
@@ -423,12 +432,21 @@ export function ResultsPage({
               }}
             >
               <p style={{ margin: '0 0 10px' }}>
-                <b style={{ color: '#140700' }}>How your score is calculated.</b> Five questions,
-                each drawn from a single Wakefield survey item, are scored on their original answer
-                scale, and summed within their pillar, then normalized to 0–100. Your composite
-                score is the weighted sum of three pillars: Budget and ownership (35%), Tools and
-                detection (35%), People and training (30%). The three readiness tiers are: Exposed
-                0–39, Reactive 40–69, Prepared 70–100.
+                <b style={{ color: '#140700' }}>How your score is calculated.</b> Six questions
+                and their respective answers, each drawn from the 2026 survey conducted by Wakefield
+                Research, are scored by assigning a point value to each answer based on Pindrop's
+                judgement on how each answer impacts readiness. These scores are then summed within
+                their pillars, and then normalized to 0–100. Your composite score is the weighted
+                sum of the three pillars: Budget and ownership (35%), Tools and detection (35%),
+                People and training (30%). The three readiness tiers are: Exposed 0–39, Reactive
+                40–69, Prepared 70–100.
+              </p>
+              <p style={{ margin: '0 0 10px' }}>
+                <b style={{ color: '#140700' }}>On the tiers.</b> Exposed (0–39), Reactive
+                (40–69), and Prepared (70–100) are thresholds Pindrop chose, not derived from the
+                survey data. Pindrop believes they reflect meaningfully different levels of
+                readiness, but a different, equally defensible framework could draw these lines in
+                different places.
               </p>
               <p style={{ margin: '0 0 10px' }}>
                 <b style={{ color: '#140700' }}>On the weighting.</b> These weights and tier
@@ -447,10 +465,19 @@ export function ResultsPage({
                 the 250 U.S. security leaders who answered the same questions.
               </p>
               <p style={{ margin: '0 0 10px' }}>
-                <b style={{ color: '#140700' }}>On the peer average.</b> The {peerAvg}/100 peer
-                average is estimated from the survey's published question-level results, since the
-                underlying data only reports aggregated answer frequencies, not each respondent's
-                full set of answers.
+                <b style={{ color: '#140700' }}>On the peer average.</b> The approximate{' '}
+                {peerAvg}/100 peer average is estimated from the survey's published question-level
+                results, since the underlying data only reports aggregated answer frequencies, not
+                each respondent's full set of answers.
+              </p>
+              <p style={{ margin: '0 0 10px' }}>
+                <b style={{ color: '#140700' }}>Limitation of Liability.</b> This tool is provided
+                "as is" without warranty of any kind, express or implied. Pindrop's liability for
+                any use of this tool shall be limited to the maximum extent allowed by applicable
+                law. This tool is intended for informational and educational purposes only and does
+                not constitute professional security advice. Pindrop makes no representation that
+                this tool is appropriate or suitable for use in your jurisdiction or specific
+                circumstances.
               </p>
               <p
                 style={{
@@ -460,10 +487,11 @@ export function ResultsPage({
                   color: '#7A7166',
                 }}
               >
-                Source: Wakefield Research for Pindrop · 250 U.S. security leaders at
-                organizations of 1,000+ employees · fielded June 11–22, 2026 · margin of error
-                ±6.2 pts. Pillars, weights, and tiers are the Pindrop framework applied to that
-                data, not a statistical finding from it.
+                Source: Wakefield Research survey data for Pindrop · 250 U.S. security leaders at
+                organizations of 1,000+ employees · fielded June 11–22, 2026 · survey margin of
+                error ±6.2 pts (this margin applies to the survey sample, not to your individual
+                calculator score). The deepfake threat landscape evolves rapidly, and results should
+                be considered in that context.
               </p>
             </div>
           )}

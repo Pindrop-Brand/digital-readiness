@@ -2,6 +2,7 @@ import { useAssessment } from './hooks/useAssessment';
 import { CoverPage } from './components/CoverPage';
 import { QuizPage } from './components/QuizPage';
 import { ResultsPage } from './components/ResultsPage';
+import { GateModal } from './components/GateModal';
 
 export function App() {
   const state = useAssessment(55, true);
@@ -39,7 +40,6 @@ export function App() {
           showBack={state.showBack}
           showContinue={state.showContinue}
           showSeeResults={state.showSeeResults}
-          showSkip={state.showSkip}
           seeResultsDisabled={state.seeResultsDisabled}
           continueDisabled={state.continueDisabled}
           hint={state.hint}
@@ -50,11 +50,14 @@ export function App() {
           onBack={state.onBack}
           onContinue={state.onContinue}
           onSeeResults={state.onSeeResults}
-          onSkip={state.onSkip}
           pageMethodOpen={state.pageMethodOpen}
           togglePageMethod={state.togglePageMethod}
           pageMethodGlyph={state.pageMethodGlyph}
         />
+      )}
+
+      {state.gateOpen && (
+        <GateModal onComplete={state.completeGate} onDismiss={state.dismissGate} />
       )}
 
       {state.stage === 'results' && (
@@ -71,6 +74,7 @@ export function App() {
           contextCards={state.contextCards}
           recPillarName={state.recPillarName}
           recBody={state.recBody}
+          isPerfect={state.isPerfect}
           peerAccOpen={state.peerAccOpen}
           togglePeerAcc={state.togglePeerAcc}
           peerAccGlyph={state.peerAccGlyph}

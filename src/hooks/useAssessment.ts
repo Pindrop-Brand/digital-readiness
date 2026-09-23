@@ -5,6 +5,8 @@ import {
   getTier,
   TAGLINE,
   REC_BY_PILLAR,
+  REC_BY_PILLAR_PREPARED,
+  REC_PERFECT,
   buildPages,
   pillarNorm,
   fullComposite,
@@ -35,6 +37,7 @@ const BTN_DISABLED = { bg: '#DAD5C9', color: '#93897A' };
 
 export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
   const [stage, setStage] = useState<Stage>('cover');
+  const [gateOpen, setGateOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [context, setContext] = useState<Record<string, ContextValue>>({});
@@ -63,6 +66,9 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
   );
 
   const startAssessment = useCallback(() => setStage('quiz'), []);
+  const openGate = useCallback(() => setGateOpen(true), []);
+  const completeGate = useCallback(() => { setGateOpen(false); setStage('results'); }, []);
+  const dismissGate = useCallback(() => setGateOpen(false), []);
 
   const selectPillarAnswer = useCallback(
     (qid: string, value: number | null, isNA: boolean) => {
@@ -92,14 +98,14 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
 
   const goNext = useCallback(() => {
     if (currentPage < pages.length - 1) setCurrentPage((p) => p + 1);
-    else setStage('results');
-  }, [currentPage, pages.length]);
+    else openGate();
+  }, [currentPage, pages.length, openGate]);
 
   const goBack = useCallback(() => {
     if (currentPage > 0) setCurrentPage((p) => p - 1);
   }, [currentPage]);
 
-  const seeResults = useCallback(() => setStage('results'), []);
+  const seeResults = useCallback(() => openGate(), [openGate]);
   const onPrint = useCallback(() => window.print(), []);
   const reset = useCallback(() => {
     setStage('cover');
@@ -182,9 +188,8 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
 
   // Navigation state
   const showBack = cp > 0;
-  const showContinue = isContextPage || (isPillarPage && !isLast && !autoAdvance);
+  const showContinue = !isLast && (isContextPage || (isPillarPage && !autoAdvance));
   const showSeeResults = isLast;
-  const showSkip = isContextPage;
   const seeResultsDisabled = isLast && !complete;
   const continueDisabled = isPillarPage && !complete;
   const hint = isPillarPage
@@ -200,6 +205,7 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
   const isReactive = tierName === 'Reactive';
   const isPrepared = tierName === 'Prepared';
   const scoreRounded = Math.round(composite);
+  const isPerfect = isPrepared && scoreRounded >= 100;
   const diff = scoreRounded - peerAvgComposite;
   const diffTxt =
     diff === 0
@@ -249,7 +255,7 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
       isSingle: true,
       singleValue: (val as string) || 'No answer',
       singleHasBench: bench != null,
-      singleBenchTxt: bench != null ? `${Math.round(bench)}% of peers` : '',
+      singleBenchTxt: bench != null ? `${Math.round(bench)}% of peers also picked this` : '',
     };
   });
 
@@ -259,6 +265,11 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     startAssessment,
     onPrint,
     reset,
+
+    // Gate
+    gateOpen,
+    completeGate,
+    dismissGate,
 
     // Quiz navigation
     currentPage: cp,
@@ -274,7 +285,6 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     showBack,
     showContinue,
     showSeeResults,
-    showSkip,
     seeResultsDisabled,
     continueDisabled,
     hint,
@@ -285,7 +295,6 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     onBack: goBack,
     onContinue: goNext,
     onSeeResults: seeResults,
-    onSkip: goNext,
 
     // Accordions
     coverDisclaimerOpen: !!openAcc['coverDisc'],
@@ -314,6 +323,9 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     pillarBars,
     contextCards,
     recPillarName: lowest.name,
-    recBody: REC_BY_PILLAR[lowest.name] || '',
+    isPerfect,
+    recBody: isPerfect
+      ? REC_PERFECT
+      : ((isPrepared ? REC_BY_PILLAR_PREPARED : REC_BY_PILLAR)[lowest.name] || ''),
   };
 }

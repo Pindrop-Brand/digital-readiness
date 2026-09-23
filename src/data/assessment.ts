@@ -244,7 +244,7 @@ export function getTier(composite: number): [TierName, string] {
 
 export const TAGLINE: Record<TierName, string> = {
   Exposed: 'Minimal defense against a threat already inside most enterprises.',
-  Reactive: 'Investing, but coverage is uneven. Most organizations sit here today.',
+  Reactive: 'Investing, but coverage is uneven. The average survey respondent sits here today.',
   Prepared: 'Leadership, tooling, and workforce are all in place. Keep testing.',
 };
 
@@ -252,10 +252,22 @@ export const REC_BY_PILLAR: Record<string, string> = {
   'Budget and ownership':
     'Name an executive owner for deepfake defense and attach a specific budget line to it. Educate your leadership team on the risks and potential fallout, including which channels are riskiest. Real ownership and real money are often the first steps to addressing the problem.',
   'Tools and detection':
-    "Evaluate a deepfake-specific detection tool rather than relying on legacy security software or homegrown tools. Pilot it against your highest-risk channel (for some, that’s the IT helpdesk, hiring, or the contact center), and start measuring how many deepfakes you’re catching.",
+    "Evaluate a deepfake-specific detection tool rather than relying on legacy security software or homegrown tools. Pilot it against your highest-risk channel (for some, that's the IT helpdesk, hiring, or the contact center), and start measuring how many deepfakes you're catching.",
   'People and training':
-    "Prioritize adoption: make sure your people actually know how to use the detection tools you’ve already invested in. Run hands-on training this quarter on your existing tools, including the exact steps to flag and escalate a suspected deepfake.",
+    "Prioritize adoption: make sure your people actually know how to use the detection tools you've already invested in. Run hands-on training this quarter on your existing tools, including the exact steps to flag and escalate a suspected deepfake.",
 };
+
+export const REC_BY_PILLAR_PREPARED: Record<string, string> = {
+  'Budget and ownership':
+    "You're prepared overall, and budget and ownership is your lowest-scoring pillar — so that's where to focus next. Lock in the funding you have: put deepfake defense on a named executive's scorecard, get it into next year's budget cycle rather than treating it as a one-time buy, and make sure spend keeps pace as attackers shift channels.",
+  'Tools and detection':
+    "You're prepared overall, and tools and detection is your lowest-scoring pillar — so that's where to focus next. Close the remaining gap: red-team your current stack with fresh synthetic voice and video, extend detection to any channel still uncovered (helpdesk, hiring, contact center), and track catch rate over time rather than assuming today's coverage holds.",
+  'People and training':
+    "You're prepared overall, and people and training is your lowest-scoring pillar — so that's where to focus next. Turn awareness into reflex: run live deepfake drills against the teams attackers target first, and rehearse the escalation path so a suspected deepfake gets flagged in minutes, not days.",
+};
+
+export const REC_PERFECT =
+  "You're prepared overall. But don't forget to continue testing your tools and raising awareness about deepfake threats with your workforce.";
 
 export interface Page {
   kind: 'pillar' | 'context-all';
