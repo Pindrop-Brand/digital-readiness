@@ -11,20 +11,15 @@ function getCookie(name: string): string {
 
 function getTrackingParams(): Record<string, string> {
   const search = new URLSearchParams(window.location.search);
-  const utmFields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'] as const;
+  const utmFields = ['utm_source', 'utm_medium', 'utm_campaign'] as const;
 
   const utms: Record<string, string> = {};
   for (const field of utmFields) {
     utms[field] = search.get(field) || getCookie(field) || '';
   }
 
-  let referrerHostname = '';
-  try { referrerHostname = document.referrer ? new URL(document.referrer).hostname : ''; } catch { /* noop */ }
-
   return {
-    landing_page_url: window.location.href,
-    referrer: document.referrer,
-    source: utms.utm_source || referrerHostname,
+    Landing_Page_URL__c: window.location.href,
     ...utms,
   };
 }
