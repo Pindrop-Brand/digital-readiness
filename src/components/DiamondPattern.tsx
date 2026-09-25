@@ -1,4 +1,6 @@
-import fractalBg from '../assets/fractal-bg.svg';
+import fractalBgRaw from '../assets/fractal-bg.svg?raw';
+
+const FRACTAL_BG_URL = `url("data:image/svg+xml,${encodeURIComponent(fractalBgRaw)}")`;
 
 interface Props {
   position: 'top-right' | 'bottom-left';
@@ -7,19 +9,15 @@ interface Props {
 
 export function DiamondPattern({ position }: Props) {
   return (
-    <img
-      src={fractalBg}
-      alt=""
+    <div
       aria-hidden="true"
       style={{
         position: 'absolute',
         inset: 0,
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        opacity: 0.5,
-        objectPosition: position === 'top-right' ? 'right top' : 'left bottom',
-pointerEvents: 'none',
+        backgroundImage: FRACTAL_BG_URL,
+        backgroundSize: 'cover',
+        backgroundPosition: position === 'top-right' ? 'right top' : 'left bottom',
+        pointerEvents: 'none',
         userSelect: 'none',
       }}
     />
