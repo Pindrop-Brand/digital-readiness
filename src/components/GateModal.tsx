@@ -48,6 +48,12 @@ export function GateModal({ onComplete, onDismiss }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const firstInputRef = useRef<HTMLInputElement>(null);
 
+  // Log tracking field values on open for testing
+  useEffect(() => {
+    console.log('[GateModal] tracking params on open:', getTrackingParams());
+    console.log('[GateModal] all cookies:', document.cookie);
+  }, []);
+
   // Lock body scroll while modal is open
   useEffect(() => {
     const prev = document.body.style.overflow;
@@ -107,21 +113,23 @@ export function GateModal({ onComplete, onDismiss }: Props) {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
     const tracking = getTrackingParams();
+    const payload = new URLSearchParams({
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      company,
+      job_title: jobTitle,
+      country,
+      consent: '1',
+      ...tracking,
+    });
+    console.log('[GateModal] submitting payload:', Object.fromEntries(payload));
     fetch(PARDOT_URL, {
       method: 'POST',
       mode: 'no-cors',
       credentials: 'include',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        company,
-        job_title: jobTitle,
-        country,
-        consent: '1',
-        ...tracking,
-      }).toString(),
+      body: payload.toString(),
     }).catch(() => {});
     onComplete();
   };

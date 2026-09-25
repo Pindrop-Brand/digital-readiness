@@ -82,7 +82,10 @@ export function ResultsPage({
   const topRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const t = setTimeout(() => {
+      topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+    return () => clearTimeout(t);
   }, []);
 
   return (
