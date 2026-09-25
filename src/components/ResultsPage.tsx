@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import type { useAssessment } from '../hooks/useAssessment';
 
 type Props = Pick<
@@ -79,12 +79,14 @@ export function ResultsPage({
   onPrint,
   reset,
 }: Props) {
+  const topRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    topRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, []);
 
   return (
-    <div>
+    <div ref={topRef}>
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '0 20px' }}>
         <div
           style={{
