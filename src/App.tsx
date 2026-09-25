@@ -36,7 +36,7 @@ export function App() {
           currentStem={state.currentStem}
           currentOpts={state.currentOpts}
           naLabel={state.naLabel}
-          contextQuestions={state.contextQuestions}
+          currentContextQuestion={state.currentContextQuestion}
           showBack={state.showBack}
           showContinue={state.showContinue}
           showSeeResults={state.showSeeResults}

@@ -11,7 +11,7 @@ type Props = Pick<
   | 'currentStem'
   | 'currentOpts'
   | 'naLabel'
-  | 'contextQuestions'
+  | 'currentContextQuestion'
   | 'showBack'
   | 'showContinue'
   | 'showSeeResults'
@@ -38,7 +38,7 @@ export function QuizPage({
   currentStem,
   currentOpts,
   naLabel,
-  contextQuestions,
+  currentContextQuestion,
   showBack,
   showContinue,
   showSeeResults,
@@ -82,8 +82,10 @@ export function QuizPage({
             The Deepfake Readiness Assessment
           </h1>
           <p style={{ color: '#FFFFFF', opacity: 0.85, fontSize: 16, maxWidth: 600, margin: '0 0 4px' }}>
-            A six-question self-assessment. Answer to find out where you stand against your peers
-            and what to prioritize next.
+            Take the self-assessment to see how your organization's exposure to AI-powered attacks
+            compares to your peers. AI-backed attacks may include, but are not limited to, fake job
+            candidates, contact center attacks, executive impersonation, IT helpdesk attacks, wealth
+            management scams, and vendor or partner impersonation.
           </p>
         </div>
       </header>
@@ -211,7 +213,9 @@ export function QuizPage({
                     (40–69), and Prepared (70–100) are thresholds Pindrop chose, not derived from
                     the survey data. Pindrop believes they reflect meaningfully different levels of
                     readiness, but a different, equally defensible framework could draw these lines
-                    in different places.
+                    in different places. Budget and ownership, tools and detection, and people and
+                    training are the three pillars Pindrop infers are vital foundations for the
+                    detecting and mitigation of new enterprise security threats.
                   </p>
                   <p style={{ margin: '0 0 10px' }}>
                     <b style={{ color: '#140700' }}>On the weighting.</b> These weights and tier
@@ -232,47 +236,20 @@ export function QuizPage({
             </>
           )}
 
-          {isContextPage && (
+          {isContextPage && currentContextQuestion && (
             <>
-              <span
-                style={{
-                  display: 'block',
-                  fontFamily: "'Geist Mono', monospace",
-                  fontSize: 10,
-                  letterSpacing: '.08em',
-                  textTransform: 'uppercase',
-                  color: '#7A7166',
-                  background: '#FBF9F5',
-                  padding: '3px 8px',
-                  borderRadius: 2,
-                  marginBottom: 12,
-                  width: 'fit-content',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Optional
-              </span>
-              <p style={{ fontSize: 14, color: '#7A7166', margin: '0 0 22px' }}>
-                Optional, but answer the following questions to receive detailed peer benchmark
-                comparisons.
+              <p style={{ fontSize: 19, fontWeight: 500, margin: '0 0 6px' }}>
+                {currentContextQuestion.stem}
               </p>
-              {contextQuestions.map((cq, i) => (
-                <div
-                  key={cq.id}
-                  style={{
-                    margin: '0 0 26px',
-                    paddingBottom: 26,
-                    borderBottom: i < contextQuestions.length - 1 ? '1px solid #E3DED3' : 'none',
-                  }}
-                >
-                  <p style={{ fontSize: 16, fontWeight: 500, margin: '0 0 10px' }}>{cq.stem}</p>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-                    {cq.opts.map((opt) => (
-                      <OptionButton key={opt.label} opt={opt} />
-                    ))}
-                  </div>
-                </div>
-              ))}
+              <p style={{ fontSize: 12.5, color: '#7A7166', margin: '0 0 14px', fontStyle: 'italic' }}>
+                This question is used for peer benchmarking and does not impact your numerical
+                readiness score.
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                {currentContextQuestion.opts.map((opt) => (
+                  <OptionButton key={opt.label} opt={opt} />
+                ))}
+              </div>
             </>
           )}
         </div>

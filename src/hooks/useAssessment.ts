@@ -41,7 +41,7 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
   const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState<Record<string, AnswerValue>>({});
   const [context, setContext] = useState<Record<string, ContextValue>>({});
-  const [openAcc, setOpenAcc] = useState<Record<string, boolean>>({});
+  const [openAcc, setOpenAcc] = useState<Record<string, boolean>>({ peerAcc: true, footerMethod: true });
 
   const toggleAcc = useCallback((id: string) => {
     setOpenAcc((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -118,7 +118,7 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
   // Derived view state
   const cp = Math.min(currentPage, pages.length - 1);
   const pg = pages[cp];
-  const isContextPage = pg.kind === 'context-all';
+  const isContextPage = pg.kind === 'context-one';
   const isPillarPage = pg.kind === 'pillar';
   const complete = pageIsComplete(pg, answers);
   const isLast = cp === pages.length - 1;
@@ -151,40 +151,28 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     }
   }
 
-  // Context questions view
-  const contextQuestions: ContextQuestionView[] = isContextPage
-    ? CONTEXT_Q.map((q) => {
-        if (q.multi) {
-          const arr = Array.isArray(context[q.id]) ? (context[q.id] as string[]) : [];
-          return {
-            id: q.id,
-            stem: q.stem,
-            opts: q.opts.map((o) => {
-              const sel = arr.includes(o);
-              return {
-                label: o,
-                symbol: '✓',
-                onClick: () => toggleContextMulti(q.id, o),
-                ...optStyle(sel),
-              };
-            }),
-          };
-        }
-        return {
-          id: q.id,
-          stem: q.stem,
-          opts: q.opts.map((o) => {
-            const sel = context[q.id] === o;
-            return {
-              label: o,
-              symbol: String(q.opts.indexOf(o)),
-              onClick: () => selectContextSingle(q.id, o),
-              ...optStyle(sel),
-            };
+  // Current context question view (single question per page)
+  const cq = isContextPage ? pg.contextQuestion ?? null : null;
+  const currentContextQuestion: ContextQuestionView | null = cq
+    ? cq.multi
+      ? {
+          id: cq.id,
+          stem: cq.stem,
+          opts: cq.opts.map((o) => {
+            const arr = Array.isArray(context[cq.id]) ? (context[cq.id] as string[]) : [];
+            const sel = arr.includes(o);
+            return { label: o, symbol: '✓', onClick: () => toggleContextMulti(cq.id, o), ...optStyle(sel) };
           }),
-        };
-      })
-    : [];
+        }
+      : {
+          id: cq.id,
+          stem: cq.stem,
+          opts: cq.opts.map((o) => {
+            const sel = context[cq.id] === o;
+            return { label: o, symbol: String(cq.opts.indexOf(o)), onClick: () => selectContextSingle(cq.id, o), ...optStyle(sel) };
+          }),
+        }
+    : null;
 
   // Navigation state
   const showBack = cp > 0;
@@ -281,7 +269,7 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     currentStem,
     currentOpts,
     naLabel,
-    contextQuestions,
+    currentContextQuestion,
     showBack,
     showContinue,
     showSeeResults,

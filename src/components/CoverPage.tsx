@@ -23,7 +23,6 @@ export function CoverPage({ startAssessment, coverDisclaimerOpen, toggleCoverDis
       }}
     >
       <DiamondPattern position="top-right" />
-      <DiamondPattern position="bottom-left" />
 
       <div
         style={{
@@ -56,8 +55,10 @@ export function CoverPage({ startAssessment, coverDisclaimerOpen, toggleCoverDis
             margin: '0 auto 34px',
           }}
         >
-          A six-question self-assessment. Answer to find out where you stand against your peers
-          and what to prioritize next.
+          Take the self-assessment to see how your organization's exposure to AI-powered attacks
+          compares to your peers. AI-backed attacks may include, but are not limited to, fake job
+          candidates, contact center attacks, executive impersonation, IT helpdesk attacks, wealth
+          management scams, and vendor or partner impersonation.
         </p>
         <button
           onClick={startAssessment}

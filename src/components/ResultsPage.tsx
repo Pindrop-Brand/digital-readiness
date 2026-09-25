@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import type { useAssessment } from '../hooks/useAssessment';
 
 type Props = Pick<
@@ -78,6 +79,10 @@ export function ResultsPage({
   onPrint,
   reset,
 }: Props) {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   return (
     <div>
       <div style={{ maxWidth: 860, margin: '0 auto', padding: '0 20px' }}>
@@ -173,7 +178,6 @@ export function ResultsPage({
                     {pb.value}
                   </span>
                 </div>
-                <p style={{ fontSize: 12.5, color: '#7A7166', margin: '0 0 6px' }}>{pb.meaning}</p>
                 <div
                   style={{
                     height: 9,
@@ -446,7 +450,9 @@ export function ResultsPage({
                 (40–69), and Prepared (70–100) are thresholds Pindrop chose, not derived from the
                 survey data. Pindrop believes they reflect meaningfully different levels of
                 readiness, but a different, equally defensible framework could draw these lines in
-                different places.
+                different places. Budget and ownership, tools and detection, and people and training
+                are the three pillars Pindrop infers are vital foundations for the detecting and
+                mitigation of new enterprise security threats.
               </p>
               <p style={{ margin: '0 0 10px' }}>
                 <b style={{ color: '#140700' }}>On the weighting.</b> These weights and tier
