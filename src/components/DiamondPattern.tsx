@@ -19,6 +19,7 @@ export function DiamondPattern({ position }: Props) {
         backgroundPosition: position === 'top-right' ? 'right top' : 'left bottom',
         pointerEvents: 'none',
         userSelect: 'none',
+        opacity: 0.5,
       }}
     />
   );
