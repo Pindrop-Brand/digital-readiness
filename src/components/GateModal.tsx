@@ -2,6 +2,33 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 
 const PARDOT_URL = 'https://go.pindrop.com/l/1002751/2026-09-02/d97tq';
 
+function getCookie(name: string): string {
+  const match = document.cookie.match(
+    new RegExp('(?:^|; )' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '=([^;]*)'),
+  );
+  return match ? decodeURIComponent(match[1]) : '';
+}
+
+function getTrackingParams(): Record<string, string> {
+  const search = new URLSearchParams(window.location.search);
+  const utmFields = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'] as const;
+
+  const utms: Record<string, string> = {};
+  for (const field of utmFields) {
+    utms[field] = search.get(field) || getCookie(field) || '';
+  }
+
+  let referrerHostname = '';
+  try { referrerHostname = document.referrer ? new URL(document.referrer).hostname : ''; } catch { /* noop */ }
+
+  return {
+    landing_page_url: window.location.href,
+    referrer: document.referrer,
+    source: utms.utm_source || referrerHostname,
+    ...utms,
+  };
+}
+
 type Props = {
   onComplete: () => void;
   onDismiss: () => void;
@@ -79,9 +106,11 @@ export function GateModal({ onComplete, onDismiss }: Props) {
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setSubmitting(true);
-    // Fire-and-forget: Pardot captures the lead regardless of response
+    const tracking = getTrackingParams();
     fetch(PARDOT_URL, {
       method: 'POST',
+      mode: 'no-cors',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         first_name: firstName,
@@ -91,6 +120,7 @@ export function GateModal({ onComplete, onDismiss }: Props) {
         job_title: jobTitle,
         country,
         consent: '1',
+        ...tracking,
       }).toString(),
     }).catch(() => {});
     onComplete();
