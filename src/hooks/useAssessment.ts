@@ -70,6 +70,18 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
   const completeGate = useCallback(() => { setGateOpen(false); setStage('results'); }, []);
   const dismissGate = useCallback(() => setGateOpen(false), []);
 
+  const doContextAutoAdvance = useCallback(
+    (pageIdx: number) => {
+      if (!autoAdvance) return;
+      const isLastPage = pageIdx === pages.length - 1;
+      setTimeout(() => {
+        if (isLastPage) openGate();
+        else setCurrentPage((p) => p + 1);
+      }, 220);
+    },
+    [autoAdvance, pages.length, openGate],
+  );
+
   const selectPillarAnswer = useCallback(
     (qid: string, value: number | null, isNA: boolean) => {
       setAnswers((prev) => {
@@ -84,7 +96,8 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
 
   const selectContextSingle = useCallback((qid: string, value: string) => {
     setContext((prev) => ({ ...prev, [qid]: value }));
-  }, []);
+    doContextAutoAdvance(currentPage);
+  }, [doContextAutoAdvance, currentPage]);
 
   const toggleContextMulti = useCallback((qid: string, value: string) => {
     setContext((prev) => {
@@ -175,8 +188,9 @@ export function useAssessment(peerAvgComposite = 55, autoAdvance = true) {
     : null;
 
   // Navigation state
+  const isContextMulti = isContextPage && (pg.contextQuestion?.multi ?? false);
   const showBack = cp > 0;
-  const showContinue = !isLast && (isContextPage || (isPillarPage && !autoAdvance));
+  const showContinue = !isLast && ((isContextPage && isContextMulti) || (isPillarPage && !autoAdvance));
   const showSeeResults = isLast;
   const seeResultsDisabled = isLast && !complete;
   const continueDisabled = isPillarPage && !complete;
